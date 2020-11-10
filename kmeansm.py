@@ -7,6 +7,7 @@ import time
 
 
 def kmeansm(data, k, l, maxiterations, eps, r):
+    start_time = time.time()
     n = data.shape[0]
     centers = random.sample(list(np.arange(0, data.shape[0])), k)
     centers.sort()
@@ -47,6 +48,8 @@ def kmeansm(data, k, l, maxiterations, eps, r):
         i += 1
     logging.debug(dx)
     logging.debug(cx)
+    end_time = time.time()
+    logging.info("Time taken %s seconds", str(end_time - start_time))
     return cx
 
 
@@ -66,10 +69,10 @@ def updateInitialDistances(data, dx, centers, cx, r):
 
 def main():
     # print("hello")
-    # data = pd.read_csv('data/iris.data', header=None)
-    # clusterl = kmeansm(data, 3, 3, 100, 0.05, 4)
-    # data[data.shape[1]] = clusterl
-    # data.to_csv('data/iris.data.kmeansm.result.csv', index=False, header=False)
+    data = pd.read_csv('data/iris.data', header=None)
+    clusterl = kmeansm(data, 3, 3, 100, 0.05, 4)
+    data[data.shape[1]] = clusterl
+    data.to_csv('data/iris.data.kmeansm.result.csv', index=False, header=False)
 
     data = pd.read_csv('data/shuttle.trn', header=None)
     clusterl = kmeansm(data, 10, 175, 20, 0.1, 9)
