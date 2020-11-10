@@ -6,38 +6,49 @@ import random
 import time
 
 
-
 def kmeansm(data, k, l, maxiterations, eps, r):
     n = data.shape[0]
-    centers = random.sample(np.arange(0,data.shape[0]), k)
+    centers = random.sample(list(np.arange(0, data.shape[0])), k)
+    centers.sort()
     centerV = []
     for i in centers:
         centerV.append(np.array(data.iloc[i, 0:r]))
-    logging.info(centers)
-    logging.info(centerV)
+    logging.debug(centers)
+    logging.debug(centerV)
     i = 1
     dx = np.full(n, np.inf)
     cx = np.full(n, 0, dtype=np.int32)  # cluster center of each point
     updateInitialDistances(data, dx, centerV, cx, r)
-    logging.info(dx)
-    logging.info(cx)
+    logging.debug(dx)
+    logging.debug(cx)
     while i < maxiterations:
+        logging.info("Iteration %d", i)
         updateInitialDistances(data, dx, centerV, cx, r)
         ascargsort = np.argsort(dx)
         li = ascargsort[::-1][:l]
-        logging.info(li)
+        logging.debug(li)
         cx[li] = -1
-        for j in range(0,k):
+        logging.debug(cx)
+
+        error = 0
+        for j in range(0, k):
             output = [idx for idx, element in enumerate(cx) if element == j]
             mean = np.full(r, 0.0)
             count = 0
             for y in output:
                 mean = mean + np.array(data.iloc[y, 0:r])
                 count += 1
-            centerV[j] = mean/count
+            error = error + abs(np.linalg.norm(centerV[j] - mean / count))
+            centerV[j] = mean / count
+        if error < eps:
+            logging.info("Error: %.7f", error)
+            logging.info("algorithm stopped because error level was minimized, number of iterations %d", i)
+            break
         i += 1
-    logging.info(dx)
-    logging.info(cx)
+    logging.debug(dx)
+    logging.debug(cx)
+    return cx
+
 
 def updateInitialDistances(data, dx, centers, cx, r):
     for i in data.index:
@@ -52,17 +63,25 @@ def updateInitialDistances(data, dx, centers, cx, r):
             index += 1
     return dx, cx
 
-def main():
-    print("hello")
-    data = pd.read_csv('data/iris.data', header=None)
-    kmeansm(data, 6, 10, 20, 0.1, 4)
-    pass
 
+def main():
+    # print("hello")
+    # data = pd.read_csv('data/iris.data', header=None)
+    # clusterl = kmeansm(data, 3, 3, 100, 0.05, 4)
+    # data[data.shape[1]] = clusterl
+    # data.to_csv('data/iris.data.kmeansm.result.csv', index=False, header=False)
+
+    data = pd.read_csv('data/shuttle.trn', header=None)
+    clusterl = kmeansm(data, 10, 175, 20, 0.1, 9)
+    data[data.shape[1]] = clusterl
+    data.to_csv('data/shuttle.data.kmeansm.result.csv', index=False, header=False)
+
+    pass
 
 
 if __name__ == "__main__":
     logging.basicConfig(level='INFO')
-    a  = np.arange(10, 1, -2) 
+    a = np.arange(10, 1, -2)
     a[np.argsort(a)] = 1
     print(a)
     print(np.full(4, 0.0))
