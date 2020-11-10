@@ -1,14 +1,4 @@
-import pandas as pd
 import numpy as np
-
-
-def falsealarmrate(olabels, oelement, clabels, celement):
-    N = np.count_nonzero(olabels == oelement)  # count the negatives in ground truth
-    negativeOarray = (olabels == oelement)  # get the binary ground truth negative element array
-    correspondingClabelarr = clabels[negativeOarray]  # create the expected negative cluster label array
-    fp = len(correspondingClabelarr) - np.count_nonzero(correspondingClabelarr == celement)  # count the false positives
-    result = N if N == 0 else fp / N
-    return result
 
 
 def falsealarmrate(olabels, oelement, clabels, celement):
