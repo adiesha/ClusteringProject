@@ -4,7 +4,7 @@ from enum import Enum
 import logging
 import random
 import time
-
+import scipy.io
 
 def kmeansm(data, k, l, maxiterations, eps, r):
     start_time = time.time()
@@ -68,17 +68,65 @@ def updateInitialDistances(data, dx, centers, cx, r):
 
 
 def main():
-    # print("hello")
-    data = pd.read_csv('data/iris.data', header=None)
-    clusterl = kmeansm(data, 3, 3, 100, 0.05, 4)
-    data[data.shape[1]] = clusterl
-    data.to_csv('data/iris.data.kmeansm.result.csv', index=False, header=False)
-
-    data = pd.read_csv('data/shuttle.trn', header=None)
-    clusterl = kmeansm(data, 10, 175, 20, 0.1, 9)
-    data[data.shape[1]] = clusterl
-    data.to_csv('data/shuttle.data.kmeansm.result.csv', index=False, header=False)
-
+    # Cardio Data set
+    mat = scipy.io.loadmat('data/cardio.mat')
+    X_car = mat['X']
+    y=mat['y']
+    X_car = pd.DataFrame(X_car)
+    print(X_car.head(4))
+    clusterlmat = kmeansm(X_car, 2, 176, 10, 0.05, 21)
+    print(clusterlmat)
+    X_car[X_car.shape[1]] = clusterlmat
+    X_car.to_csv('data/cardio.data.kmeansm.result.csv', index=False, header=False)
+    
+    # Pima Data set
+    datapima = pd.read_csv('data/pimaindiansdiabetes.csv')
+    clusterlPim = kmeansm(datapima, 2, 268, 5, 0.2, 8)
+    datapima[datapima.shape[1]] = clusterlPim
+    print(clusterlPim)
+    datapima.to_csv('data/pima.data.kmeansm.result.csv', index=False, header=False)
+    
+    # Wine Data Set
+    win = scipy.io.loadmat('data/wine.mat')
+    print(win)
+    X_win = win['X']
+    y_win=win['y']
+    print(y_win)
+    X_win = pd.DataFrame(X_win)
+    print(X_win.head(4))
+    clusterlwin = kmeansm(X_win, 2, 10, 10, 0.2, 13)
+    print(clusterlwin)
+    X_win[X_win.shape[1]] = clusterlwin
+    X_win.to_csv('data/wine.data.kmeansm.result.csv', index=False, header=False)
+    
+    # Glass Data Set
+    
+    glass = scipy.io.loadmat('data/glass.mat')
+    print(glass)
+    X_gla = glass['X']
+    y_gla=glass['y']
+    print(y_gla)
+    X_gla = pd.DataFrame(X_gla)
+    print(X_gla.head(4))
+    clusterlgla = kmeansm(X_gla, 2, 9, 10, 0.2, 9)
+    print(clusterlgla)
+    X_gla[X_gla.shape[1]] = clusterlgla
+    X_gla.to_csv('data/glass.data.kmeansm.result.csv', index=False, header=False)
+    
+    # Breast Cancer Data sets
+    
+    cancer = scipy.io.loadmat('data/breastw.mat')
+    print(cancer)
+    X_can = cancer['X']
+    y_can=cancer['y']
+    print(y_gla)
+    X_can = pd.DataFrame(X_can)
+    print(X_can.head(4))
+    clusterlcan = kmeansm(X_can, 2, 239, 10, 0.2, 9)
+    print(clusterlcan)
+    X_can[X_can.shape[1]] = clusterlcan
+    X_can.to_csv('data/breastw.data.kmeansm.result.csv', index=False, header=False)
+    
     pass
 
 

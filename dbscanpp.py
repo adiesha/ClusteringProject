@@ -7,7 +7,7 @@ import random
 import networkx as nx
 import matplotlib.pyplot as plt
 import time
-
+import scipy.io
 
 def dbscanp(data, k, eps, minpts, factor, initialization=None, plot=False, plotPath='data/result.png', norm=None,
             leafsize=10):
@@ -95,15 +95,77 @@ def kgreedyinitialization(data, k, m, norm=None):
 
 
 def main():
-    data = pd.read_csv('data/iris.data', header=None)
-    result = dbscanp(data, 4, 0.485, 6, 0.5, initialization=Initialization.KCENTRE, plot=True)
-    result[0].to_csv('data/iris.data.dbscan.result.csv', index=False, header=False)
-    print("Time: ", result[1])
-    print("query count", result[2])
-    aa = kgreedyinitialization(data, 4, 10)
-    print(aa)
-
-
+    
+    ## Pima Data Set
+    datapima = pd.read_csv("data/pimaindiansdiabetes.csv")
+    col = ['preg','plas','pres','skin','test','mass','pedi','age','class']
+    datapima.columns = col
+    X = datapima.iloc[:,:-1]
+    y = datapima.iloc[:,-1]
+    resultpima = dbscanp(X, 4, 0.485, 6, 0.5, initialization=Initialization.KCENTRE, plot=True)
+    resultpima[0].to_csv('data/pima.data.dbscan.result.csv', index=False, header=False)
+    print("Time: ", resultpima[1])
+    print("query count", resultpima[2])
+    aapima = kgreedyinitialization(X, 4, 10)
+    print(aapima)
+    
+    ## Cardio Data Set
+    mat = scipy.io.loadmat('data/cardio.mat')
+    X_car = mat['X']
+    y_car=mat['y']
+    X_car= pd.DataFrame(X_car)
+    y_car= pd.DataFrame(y_car)
+    resultmat = dbscanp(X_car, 4, 0.485, 6, 0.5, initialization=Initialization.KCENTRE, plot=True)
+    resultmat[0].to_csv('data/cardio.data.dbscan.result.csv', index=False, header=False)
+    print("Time: ", resultmat[1])
+    print("query count", resultmat[2])
+    aamat= kgreedyinitialization(X_car, 4, 10)
+    print(aamat)
+    
+    ## Wine Data Set
+    win = scipy.io.loadmat('data/wine.mat')
+    print(win)
+    X_win = win['X']
+    y_win=win['y']
+    X_win= pd.DataFrame(X_win)
+    y_win= pd.DataFrame(y_win)
+    resultwin = dbscanp(X_win, 4, 0.485, 6, 0.5, initialization=Initialization.KCENTRE, plot=True)
+    resultwin[0].to_csv('data/wine.data.dbscan.result.csv', index=False, header=False)
+    print("Time: ", resultwin[1])
+    print("query count", resultwin[2])
+    aawin= kgreedyinitialization(X_win, 4, 10)
+    print(aawin)
+    
+    ## Glass Data Set
+    glass = scipy.io.loadmat('data/glass.mat')
+    print(glass)
+    X_gla = glass['X']
+    y_gla=glass['y']
+    X_gla= pd.DataFrame(X_gla)
+    y_gla= pd.DataFrame(y_gla)
+    resultgla = dbscanp(X_gla, 4, 0.485, 6, 0.5, initialization=Initialization.KCENTRE, plot=True)
+    resultgla[0].to_csv('data/glass.data.dbscan.result.csv', index=False, header=False)
+    print("Time: ", resultgla[1])
+    print("query count", resultgla[2])
+    aagla= kgreedyinitialization(X_gla, 4, 10)
+    print(aagla)
+    
+    ## Breast Cancer Data sets
+    cancer = scipy.io.loadmat('data/breastw.mat')
+    print(cancer)
+    X_can = cancer['X']
+    y_can=cancer['y']
+    X_can= pd.DataFrame(X_can)
+    y_can= pd.DataFrame(y_can)
+    resultcan = dbscanp(X_can, 4, 0.485, 6, 0.5, initialization=Initialization.KCENTRE, plot=True)
+    resultcan[0].to_csv('data/cancer.data.dbscan.result.csv', index=False, header=False)
+    print("Time: ", resultcan[1])
+    print("query count", resultcan[2])
+    aacan= kgreedyinitialization(X_gla, 4, 10)
+    print(aacan)
+    
+    
+    
 class Initialization(Enum):
     NONE = 1
     UNIFORM = 2
