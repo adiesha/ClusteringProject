@@ -40,12 +40,13 @@ def dbscanp(data, k, eps, minpts, factor, initialization=None, plot=False, plotP
 
         neighbourhood = neighbourhoodtree.query_ball_point(data.iloc[i, 0:k], r=eps)
         querycount += 1
+        neighbourhood.remove(i)
         # print(len(neighbourhood))
         if len(neighbourhood) >= minpts:
             core_points.append(i)
 
         logging.info(neighbourhood)
-        neighbourhood.remove(i)  # remove the i from neighbourhood list to create the seedset
+        # remove the i from neighbourhood list to create the seedset
 
         seedset = neighbourhood
         j = 0
